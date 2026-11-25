@@ -1,0 +1,363 @@
+<!-- ============ LATEST NEWS TICKER ============ -->
+<div class="ticker" aria-label="Latest announcements">
+  <div class="container ticker-inner">
+    <span class="ticker-label"><svg class="icon"><use href="#i-bell"/></svg>Latest</span>
+    <div class="ticker-track">
+      <div class="ticker-move">
+        <% [...news, ...news].forEach(function (n) { %>
+          <a href="<%= n.href %>"><%= n.title %></a>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-blob hero-blob-1" aria-hidden="true"></div>
+  <div class="hero-blob hero-blob-2" aria-hidden="true"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="dot"></span>Admissions open for <%= school.admissionYear %></span>
+      <h1>Nurturing minds, <span class="hl">building tomorrow's</span> leaders</h1>
+      <p class="lead">
+        <%= school.fullName %> offers quality education from nursery to senior six in a safe, caring and
+        modern environment where every learner is known, challenged and inspired to succeed.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="#admissions">Apply for <%= school.admissionYear %><svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="#about">Discover our school</a>
+      </div>
+      <ul class="hero-trust">
+        <li><svg class="icon"><use href="#i-check"/></svg>Qualified teachers</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Safe campus</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Online parent portal</li>
+      </ul>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-main">
+        <div class="hv-badge"><svg class="icon"><use href="#i-graduation"/></svg></div>
+        <p class="hv-title">Class of <%= school.admissionYear + 6 %> is enrolling</p>
+        <p class="hv-sub"><%= school.motto %></p>
+        <div class="hv-bars"><span></span><span></span><span></span></div>
+      </div>
+      <div class="hv-card hv-card-1">
+        <span class="hv-ico gold"><svg class="icon"><use href="#i-trophy"/></svg></span>
+        <div><strong><%= stats[3].value %>%</strong><small>Exam pass rate</small></div>
+      </div>
+      <div class="hv-card hv-card-2">
+        <span class="hv-ico blue"><svg class="icon"><use href="#i-users"/></svg></span>
+        <div><strong><%= stats[0].value %>+</strong><small>Happy learners</small></div>
+      </div>
+      <div class="hv-card hv-card-3">
+        <span class="hv-ico gold"><svg class="icon"><use href="#i-monitor"/></svg></span>
+        <div><strong>Parent portal</strong><small>Results &amp; fees online</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="stats" aria-label="School at a glance">
+  <div class="container stats-grid">
+    <% stats.forEach(function (s) { %>
+      <div class="stat reveal">
+        <p class="stat-num"><span data-count="<%= s.value %>">0</span><%= s.suffix %></p>
+        <p class="stat-label"><%= s.label %></p>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div class="about-visual reveal">
+      <div class="about-frame">
+        <div class="about-card about-card-main">
+          <svg class="icon"><use href="#i-book"/></svg>
+          <p>Learning with purpose</p>
+        </div>
+        <div class="about-card about-card-a"><strong><%= stats[2].value %></strong><small>years serving the community</small></div>
+        <div class="about-card about-card-b"><svg class="icon"><use href="#i-heart"/></svg><small>A caring family</small></div>
+      </div>
+    </div>
+
+    <div class="about-copy reveal">
+      <span class="kicker">About <%= school.name %></span>
+      <h2 class="section-title">A school where every child belongs and can excel</h2>
+      <p>
+        At <%= school.fullName %>, we combine strong academics with character, leadership and service.
+        Our teachers work closely with families to help each learner reach their full potential, in the
+        classroom and beyond.
+      </p>
+      <div class="mv-grid">
+        <div class="mv">
+          <span class="mv-ico"><svg class="icon"><use href="#i-star"/></svg></span>
+          <h3>Our mission</h3>
+          <p>To provide quality, values-based education that equips learners to thrive and serve.</p>
+        </div>
+        <div class="mv">
+          <span class="mv-ico"><svg class="icon"><use href="#i-globe"/></svg></span>
+          <h3>Our vision</h3>
+          <p>A generation of confident, responsible leaders who shape a better Rwanda and world.</p>
+        </div>
+      </div>
+      <ul class="check-list">
+        <li><svg class="icon"><use href="#i-check"/></svg>Small class sizes and personal attention</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Clubs, sports, music and community service</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Close partnership between school and parents</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACADEMICS ============ -->
+<section class="section section-soft" id="academics">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Academics</span>
+      <h2 class="section-title">A clear path from first steps to graduation</h2>
+      <p>Four stages designed to build knowledge, skills and confidence at every age.</p>
+    </div>
+    <div class="program-grid">
+      <% programs.forEach(function (p, i) { %>
+        <article class="program reveal" style="--d: <%= i * 80 %>ms">
+          <span class="program-ico"><svg class="icon"><use href="#i-<%= p.icon %>"/></svg></span>
+          <h3><%= p.level %></h3>
+          <p class="program-ages"><%= p.ages %></p>
+          <p><%= p.text %></p>
+          <a class="link-arrow" href="#admissions">Learn more <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY US ============ -->
+<section class="section" id="why">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Why <%= school.name %></span>
+      <h2 class="section-title">Everything your child needs to succeed</h2>
+      <p>Great teaching, great facilities and a culture of care, supported by smart technology.</p>
+    </div>
+    <div class="feature-grid">
+      <% features.forEach(function (f, i) { %>
+        <div class="feature reveal" style="--d: <%= (i % 3) * 80 %>ms">
+          <span class="feature-ico"><svg class="icon"><use href="#i-<%= f.icon %>"/></svg></span>
+          <div>
+            <h3><%= f.title %></h3>
+            <p><%= f.text %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTALS ============ -->
+<section class="section portals" id="portals">
+  <div class="container">
+    <div class="section-head section-head-light reveal">
+      <span class="kicker kicker-gold">Online portals</span>
+      <h2 class="section-title">One platform for the whole school community</h2>
+      <p>Sign in to see results, attendance, fees, assignments and messages anytime, on any device.</p>
+    </div>
+    <div class="portal-grid">
+      <% portals.forEach(function (p, i) { %>
+        <a class="portal reveal" href="<%= p.href %>" style="--d: <%= i * 80 %>ms">
+          <span class="portal-ico"><svg class="icon"><use href="#i-<%= p.icon %>"/></svg></span>
+          <h3><%= p.title %></h3>
+          <p><%= p.text %></p>
+          <span class="portal-go">Sign in <svg class="icon"><use href="#i-arrow-right"/></svg></span>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS & EVENTS ============ -->
+<section class="section" id="news">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">News &amp; events</span>
+      <h2 class="section-title">What is happening at <%= school.name %></h2>
+    </div>
+    <div class="news-layout">
+      <div class="news-list">
+        <% news.forEach(function (n, i) { %>
+          <article class="news-card reveal" style="--d: <%= i * 80 %>ms">
+            <% if (n.image) { %>
+              <div class="news-thumb has-img"><img src="<%= n.image %>" alt="" loading="lazy"></div>
+            <% } else { %>
+              <div class="news-thumb tone-<%= (i % 3) + 1 %>"><svg class="icon"><use href="#i-<%= n.icon %>"/></svg></div>
+            <% } %>
+            <div class="news-body">
+              <p class="news-meta"><span class="tag"><%= n.category %></span><%= n.date %></p>
+              <h3><%= n.title %></h3>
+              <p><%= n.text %></p>
+              <a class="link-arrow" href="<%= n.href %>">Read more <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+            </div>
+          </article>
+        <% }) %>
+        <% if (newsFromDb) { %>
+          <p><a class="link-arrow" href="/news">View all news <svg class="icon"><use href="#i-arrow-right"/></svg></a></p>
+        <% } %>
+      </div>
+
+      <aside class="events reveal" aria-label="Upcoming events">
+        <h3><svg class="icon"><use href="#i-calendar"/></svg>Upcoming events</h3>
+        <ul>
+          <% events.forEach(function (e) { %>
+            <li>
+              <div class="event-date"><strong><%= e.day %></strong><span><%= e.month %></span></div>
+              <div class="event-info">
+                <h4><%= e.title %></h4>
+                <p><svg class="icon"><use href="#i-clock"/></svg><%= e.time %> &middot; <%= e.place %></p>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="section section-soft" id="gallery">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Campus life</span>
+      <h2 class="section-title">Moments that make Utunyange special</h2>
+      <p>Learning, sport, music and friendship, all part of life at <%= school.name %>.</p>
+    </div>
+    <div class="gallery-grid">
+      <% gallery.forEach(function (g, i) { %>
+        <figure class="g-tile g-v<%= g.variant %> g-<%= i + 1 %> reveal" style="--d: <%= i * 60 %>ms">
+          <svg class="icon"><use href="#i-<%= g.icon %>"/></svg>
+          <figcaption><%= g.caption %></figcaption>
+        </figure>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Voices</span>
+      <h2 class="section-title">What our community says</h2>
+    </div>
+    <div class="testimonials reveal" id="testimonials-slider">
+      <% testimonials.forEach(function (t, i) { %>
+        <figure class="t-slide<%= i === 0 ? ' is-active' : '' %>">
+          <blockquote><%= t.quote %></blockquote>
+          <figcaption><strong><%= t.name %></strong><span><%= t.role %></span></figcaption>
+        </figure>
+      <% }) %>
+      <div class="t-dots" role="tablist" aria-label="Testimonials">
+        <% testimonials.forEach(function (t, i) { %>
+          <button type="button" class="t-dot<%= i === 0 ? ' is-active' : '' %>" aria-label="Show testimonial <%= i + 1 %>" data-index="<%= i %>"></button>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMISSIONS ============ -->
+<section class="section admissions" id="admissions">
+  <div class="container">
+    <div class="section-head section-head-dark reveal">
+      <span class="kicker">Admissions <%= school.admissionYear %></span>
+      <h2 class="section-title">Join the Utunyange family</h2>
+      <p>Four simple steps to secure your child's place. Places are limited, so apply early.</p>
+    </div>
+    <ol class="steps">
+      <% steps.forEach(function (s, i) { %>
+        <li class="step reveal" style="--d: <%= i * 80 %>ms">
+          <span class="step-n"><%= s.n %></span>
+          <h3><%= s.title %></h3>
+          <p><%= s.text %></p>
+        </li>
+      <% }) %>
+    </ol>
+    <div class="admissions-cta reveal">
+      <a class="btn btn-primary btn-lg" href="/apply">Start your application<svg class="icon"><use href="#i-arrow-right"/></svg></a>
+      <a class="btn btn-dark-outline btn-lg" href="#contact">Book a campus visit</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Contact us</span>
+      <h2 class="section-title">We would love to hear from you</h2>
+      <p>Questions about admissions, fees or visiting the school? Send us a message.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="ci">
+          <span class="ci-ico"><svg class="icon"><use href="#i-map-pin"/></svg></span>
+          <div><h4>Visit us</h4><p><%= school.address %></p></div>
+        </div>
+        <div class="ci">
+          <span class="ci-ico"><svg class="icon"><use href="#i-phone"/></svg></span>
+          <div><h4>Call us</h4><p><%= school.phone %></p></div>
+        </div>
+        <div class="ci">
+          <span class="ci-ico"><svg class="icon"><use href="#i-mail"/></svg></span>
+          <div><h4>Email us</h4><p><%= school.email %></p></div>
+        </div>
+        <div class="ci">
+          <span class="ci-ico"><svg class="icon"><use href="#i-clock"/></svg></span>
+          <div><h4>Office hours</h4><p><%= school.hours %></p></div>
+        </div>
+        <div class="map-placeholder" role="img" aria-label="Map placeholder">
+          <svg class="icon"><use href="#i-map-pin"/></svg>
+          <span>Map location goes here</span>
+        </div>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm" novalidate>
+        <div class="form-row">
+          <label class="field">
+            <span>Full name *</span>
+            <input type="text" name="name" autocomplete="name" required minlength="2" placeholder="Your name">
+          </label>
+          <label class="field">
+            <span>Email *</span>
+            <input type="email" name="email" autocomplete="email" required placeholder="you@example.com">
+          </label>
+        </div>
+        <div class="form-row">
+          <label class="field">
+            <span>Phone</span>
+            <input type="tel" name="phone" autocomplete="tel" placeholder="+250 ...">
+          </label>
+          <label class="field">
+            <span>Subject</span>
+            <select name="subject">
+              <option>Admissions</option>
+              <option>Fees</option>
+              <option>Visit the school</option>
+              <option>General enquiry</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span>Message *</span>
+          <textarea name="message" rows="5" required minlength="10" placeholder="How can we help?"></textarea>
+        </label>
+        <!-- Honeypot: leave empty -->
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn btn-primary btn-lg" type="submit"><span class="btn-label">Send message</span><svg class="icon"><use href="#i-send"/></svg></button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>

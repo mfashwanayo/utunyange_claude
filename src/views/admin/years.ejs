@@ -1,0 +1,27 @@
+<%- include('../partials/page-head', { ph: { title: 'Academic years', subtitle: 'Each year has three terms. Only one year is current.', actions: [{ href: '/admin/years/new', label: 'Add academic year', icon: 'plus' }] } }) %>
+
+<% if (years.length) { %>
+  <div class="stack">
+    <% years.forEach(function (y) { %>
+      <section class="card">
+        <div class="card-head">
+          <h3><%= y.name %> <% if (y.is_current) { %><span class="badge badge-green">Current</span><% } %></h3>
+          <% if (!y.is_current) { %>
+            <form method="post" action="/admin/years/<%= y.id %>/current" data-confirm="Make <%= y.name %> the current academic year?">
+              <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+              <button class="btn btn-soft btn-xs" type="submit">Make current</button>
+            </form>
+          <% } %>
+        </div>
+        <p class="cell-sub" style="margin-bottom:10px"><%= y.start_date %> to <%= y.end_date %></p>
+        <div class="terms">
+          <% y.terms.forEach(function (t) { %>
+            <span class="term-chip"><strong><%= t.name %></strong> <%= t.start_date %> to <%= t.end_date %></span>
+          <% }) %>
+        </div>
+      </section>
+    <% }) %>
+  </div>
+<% } else { %>
+  <section class="card card-flush"><div class="empty"><svg class="icon"><use href="#i-calendar"/></svg><strong>No academic year yet</strong>Add one to start creating classes.</div></section>
+<% } %>

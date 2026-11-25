@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/icons') %>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <%- include('../partials/navbar') %>
+
+  <main id="main">
+    <%- body %>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" type="button">
+    <svg class="icon"><use href="#i-arrow-up"/></svg>
+  </button>
+
+  <script src="/js/main.js" defer></script>
+</body>
+</html>

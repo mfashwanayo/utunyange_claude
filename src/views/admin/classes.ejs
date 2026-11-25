@@ -1,0 +1,34 @@
+<%- include('../partials/page-head', { ph: { title: 'Classes', subtitle: rows.length + ' class(es)' + (current ? ' - current year: ' + current.name : ''), actions: [{ href: '/admin/classes/new', label: 'Add class', icon: 'plus' }, { href: '/admin/subjects', label: 'Subjects', cls: 'btn-soft' }] } }) %>
+
+<form class="filters" method="get" action="/admin/classes">
+  <select name="year_id" aria-label="Academic year">
+    <% years.forEach(function (y) { %><option value="<%= y.value %>"<%= String(yearId) === String(y.value) ? ' selected' : '' %>><%= y.label %></option><% }) %>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Show</button>
+</form>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Class</th><th>Level</th><th>Class teacher</th><th>Students</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td><a class="cell-main" href="/admin/classes/<%= r.id %>"><%= classLabel(r.name, r.section) %></a><% if (r.combination) { %><span class="cell-sub"><%= r.combination %></span><% } %></td>
+              <td><%= r.level_name %></td>
+              <td><%= r.teacher_name || '-' %></td>
+              <td><%= r.student_count %><%= r.capacity ? ' / ' + r.capacity : '' %></td>
+              <td class="actions">
+                <a class="btn btn-soft btn-xs" href="/admin/classes/<%= r.id %>">Open</a>
+                <a class="btn btn-soft btn-xs" href="/admin/classes/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-layout"/></svg><strong>No classes for this year</strong>Add classes such as P1, P2 or S1.</div>
+  <% } %>
+</section>

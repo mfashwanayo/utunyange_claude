@@ -1,0 +1,39 @@
+<%#
+  One form field. Usage:
+    <%- include('../partials/field', { f: { name: 'first_name', label: 'First name', required: true } }) %>
+  Reads the current value from `values[name]` and the message from `errors[name]` of the page.
+  Options in f: type (text|email|tel|date|datetime-local|number|textarea|select|checkbox), hint, rows,
+  options [{value,label}] and blank (select), placeholder, maxlength, wide, autofocus.
+%>
+<%
+  var fvals = (typeof values !== 'undefined' && values) ? values : {};
+  var ferrs = (typeof errors !== 'undefined' && errors) ? errors : {};
+  var fv = fvals[f.name];
+  if (fv === undefined || fv === null) fv = '';
+  var fe = ferrs[f.name];
+  var ft = f.type || 'text';
+%>
+<% if (ft === 'checkbox') { %>
+  <div class="field field-check<%= f.wide ? ' field-wide' : '' %>">
+    <label class="check"><input type="checkbox" name="<%= f.name %>" value="1"<% if (fv && fv !== '0') { %> checked<% } %>> <span><%= f.label %></span></label>
+    <% if (f.hint) { %><small class="field-hint"><%= f.hint %></small><% } %>
+  </div>
+<% } else { %>
+  <label class="field<%= fe ? ' has-error' : '' %><%= f.wide ? ' field-wide' : '' %>">
+    <span><%= f.label %><%= f.required ? ' *' : '' %></span>
+    <% if (ft === 'select') { %>
+      <select name="<%= f.name %>"<% if (f.required) { %> required<% } %>>
+        <% if (f.blank !== undefined) { %><option value=""><%= f.blank %></option><% } %>
+        <% (f.options || []).forEach(function (o) { %>
+          <option value="<%= o.value %>"<% if (String(o.value) === String(fv)) { %> selected<% } %>><%= o.label %></option>
+        <% }) %>
+      </select>
+    <% } else if (ft === 'textarea') { %>
+      <textarea name="<%= f.name %>" rows="<%= f.rows || 4 %>"<% if (f.maxlength) { %> maxlength="<%= f.maxlength %>"<% } %><% if (f.placeholder) { %> placeholder="<%= f.placeholder %>"<% } %>><%= fv %></textarea>
+    <% } else { %>
+      <input type="<%= ft %>" name="<%= f.name %>" value="<%= fv %>"<% if (f.required) { %> required<% } %><% if (f.maxlength) { %> maxlength="<%= f.maxlength %>"<% } %><% if (f.placeholder) { %> placeholder="<%= f.placeholder %>"<% } %><% if (f.autofocus) { %> autofocus<% } %><% if (ft === 'number') { %> min="1"<% } %>>
+    <% } %>
+    <% if (f.hint) { %><small class="field-hint"><%= f.hint %></small><% } %>
+    <% if (fe) { %><small class="field-error"><%= fe %></small><% } %>
+  </label>
+<% } %>

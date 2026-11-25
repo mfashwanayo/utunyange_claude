@@ -1,0 +1,30 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/users', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'first_name', label: 'First name', required: true, autofocus: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'last_name', label: 'Last name', required: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'email', label: 'Email (used to sign in)', type: 'email', required: true, maxlength: 190 } }) %>
+    <%- include('../partials/field', { f: { name: 'phone', label: 'Phone', type: 'tel', maxlength: 30 } }) %>
+
+    <% if (canChangeRole) { %>
+      <%- include('../partials/field', { f: { name: 'role', label: 'Role', type: 'select', required: true, options: roleOptions, hint: 'Decides which parts of the system this person can open.' } }) %>
+    <% } else if (isEdit) { %>
+      <label class="field"><span>Role</span><input type="text" value="<%= target.role_label %>" disabled></label>
+    <% } %>
+
+    <% if (isEdit && canChangeStatus) { %>
+      <%- include('../partials/field', { f: { name: 'status', label: 'Status', type: 'select', options: statusOptions, hint: 'Inactive or suspended accounts cannot sign in.' } }) %>
+    <% } %>
+  </div>
+
+  <% if (!isEdit) { %>
+    <p class="field-hint" style="margin-top:16px">A temporary password is created automatically and shown once after you save. The person must replace it when they first sign in.</p>
+  <% } %>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Create account' %></button>
+    <a class="btn btn-soft" href="/admin/users">Cancel</a>
+  </div>
+</form>

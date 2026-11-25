@@ -1,0 +1,49 @@
+<%- include('../partials/page-head', { ph: { title: 'Inbox', subtitle: unread + ' unread message(s) from the website contact form' } }) %>
+
+<form class="filters" method="get" action="/admin/inbox">
+  <select name="show" aria-label="Show">
+    <option value="">All messages</option>
+    <option value="unread"<%= filters.show === 'unread' ? ' selected' : '' %>>Unread only</option>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Show</button>
+</form>
+<% if (unread > 0) { %>
+  <form method="post" action="/admin/inbox/read-all" style="margin-bottom:16px">
+    <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+    <button class="btn btn-soft btn-sm" type="submit"><svg class="icon"><use href="#i-check"/></svg>Mark all as read</button>
+  </form>
+<% } %>
+
+<% if (rows.length) { %>
+  <div class="stack">
+    <% rows.forEach(function (m) { %>
+      <article class="card msg<%= m.is_read ? '' : ' unread' %>">
+        <header>
+          <div>
+            <strong><%= m.name %></strong>
+            <a href="mailto:<%= m.email %>"><%= m.email %></a><% if (m.phone) { %> &middot; <%= m.phone %><% } %>
+          </div>
+          <small><%= fmtDateTime(m.created_at) %></small>
+        </header>
+        <h4><%= m.subject || '(No subject)' %></h4>
+        <p style="white-space:pre-line"><%= m.message %></p>
+        <div class="actions" style="justify-content:flex-start;margin-top:12px">
+          <a class="btn btn-primary btn-xs" href="mailto:<%= m.email %>?subject=<%= encodeURIComponent('Re: ' + (m.subject || 'Your message')) %>"><svg class="icon"><use href="#i-mail"/></svg>Reply</a>
+          <form method="post" action="/admin/inbox/<%= m.id %>/read">
+            <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+            <input type="hidden" name="read" value="<%= m.is_read ? '0' : '1' %>">
+            <button class="btn btn-soft btn-xs" type="submit"><%= m.is_read ? 'Mark unread' : 'Mark read' %></button>
+          </form>
+          <form method="post" action="/admin/inbox/<%= m.id %>/delete" data-confirm="Delete this message?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+            <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Delete</button>
+          </form>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+<% } else { %>
+  <section class="card card-flush"><div class="empty"><svg class="icon"><use href="#i-mail"/></svg><strong>No messages</strong>Messages sent from the website contact form appear here.</div></section>
+<% } %>
+
+<%- include('../partials/pagination') %>

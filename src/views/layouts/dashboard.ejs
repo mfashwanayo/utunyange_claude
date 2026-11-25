@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body class="dash-body">
+  <%- include('../partials/icons') %>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <div class="dash">
+    <%- include('../partials/sidebar') %>
+    <div class="dash-backdrop" id="dashBackdrop"></div>
+
+    <div class="dash-main">
+      <%- include('../partials/topbar') %>
+      <main class="dash-content" id="main">
+        <%- include('../partials/flash') %>
+        <%- body %>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/dashboard.js" defer></script>
+</body>
+</html>

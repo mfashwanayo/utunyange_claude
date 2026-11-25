@@ -1,0 +1,36 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/parents', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<div class="cards-2">
+  <form class="card form-card" method="post" action="<%= action %>" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+    <div class="form-grid">
+      <%- include('../partials/field', { f: { name: 'first_name', label: 'First name', required: true, autofocus: true, maxlength: 80 } }) %>
+      <%- include('../partials/field', { f: { name: 'last_name', label: 'Last name', required: true, maxlength: 80 } }) %>
+      <%- include('../partials/field', { f: { name: 'email', label: 'Email (used to sign in)', type: 'email', required: true, maxlength: 190 } }) %>
+      <%- include('../partials/field', { f: { name: 'phone', label: 'Phone', type: 'tel', maxlength: 30 } }) %>
+      <%- include('../partials/field', { f: { name: 'alt_phone', label: 'Alternative phone', type: 'tel', maxlength: 30 } }) %>
+      <%- include('../partials/field', { f: { name: 'occupation', label: 'Occupation', maxlength: 120 } }) %>
+      <%- include('../partials/field', { f: { name: 'address', label: 'Address', maxlength: 255, wide: true } }) %>
+    </div>
+    <% if (!isEdit) { %><p class="field-hint" style="margin-top:16px">A temporary password is created automatically and shown once after saving.</p><% } %>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Add parent' %></button>
+      <a class="btn btn-soft" href="/admin/parents">Cancel</a>
+    </div>
+  </form>
+
+  <% if (isEdit) { %>
+    <section class="card">
+      <h3>Children</h3>
+      <% if (children && children.length) { %>
+        <ul class="activity">
+          <% children.forEach(function (c) { %>
+            <li><span><a href="/admin/students/<%= c.id %>"><strong><%= c.first_name %> <%= c.last_name %></strong></a> &middot; <%= c.admission_no %></span><small><%= c.relationship %></small></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="cell-sub">No children linked yet. Open a student and use "Link a parent".</p>
+      <% } %>
+    </section>
+  <% } %>
+</div>

@@ -1,0 +1,17 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/events', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'title', label: 'Event title', required: true, autofocus: true, maxlength: 190, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'starts_at', label: 'Starts', type: 'datetime-local', required: true } }) %>
+    <%- include('../partials/field', { f: { name: 'ends_at', label: 'Ends', type: 'datetime-local' } }) %>
+    <%- include('../partials/field', { f: { name: 'location', label: 'Location', maxlength: 190, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'description', label: 'Description', type: 'textarea', rows: 5, maxlength: 5000, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'is_published', label: 'Show on the website', type: 'checkbox', wide: true } }) %>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Add event' %></button>
+    <a class="btn btn-soft" href="/admin/events">Cancel</a>
+  </div>
+</form>

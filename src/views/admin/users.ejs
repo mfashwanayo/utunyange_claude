@@ -1,0 +1,56 @@
+<%- include('../partials/page-head', { ph: { title: 'User accounts', subtitle: pager.total + ' account(s). Teachers, parents and students are added on their own pages.', actions: [{ href: '/admin/users/new', label: 'Add staff account', icon: 'plus' }] } }) %>
+
+<form class="filters" method="get" action="/admin/users">
+  <input type="search" name="q" value="<%= filters.q %>" placeholder="Search name or email">
+  <select name="role" aria-label="Role">
+    <option value="">All roles</option>
+    <% roles.forEach(function (r) { %><option value="<%= r.name %>"<%= filters.role === r.name ? ' selected' : '' %>><%= r.label %></option><% }) %>
+  </select>
+  <select name="status" aria-label="Status">
+    <option value="">Any status</option>
+    <% ['active', 'inactive', 'suspended'].forEach(function (s) { %><option value="<%= s %>"<%= filters.status === s ? ' selected' : '' %>><%= s.charAt(0).toUpperCase() + s.slice(1) %></option><% }) %>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+  <% if (filters.q || filters.role || filters.status) { %><a class="btn btn-ghost-dark btn-sm" href="/admin/users">Clear</a><% } %>
+</form>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Last sign-in</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td><span class="cell-main"><%= r.first_name %> <%= r.last_name %><% if (r.isSelf) { %> <span class="badge badge-blue">You</span><% } %></span><span class="cell-sub"><%= r.email %></span></td>
+              <td><span class="badge badge-blue"><%= r.role_label %></span></td>
+              <td><span class="badge badge-<%= r.status === 'active' ? 'green' : (r.status === 'suspended' ? 'red' : 'gray') %>"><%= r.status %></span></td>
+              <td><%= r.last_login_at ? fmtDateTime(r.last_login_at) : 'Never' %></td>
+              <td class="actions">
+                <% if (r.manageable) { %>
+                  <span class="actions">
+                    <a class="btn btn-soft btn-xs" href="/admin/users/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+                    <% if (!r.isSelf) { %>
+                      <form method="post" action="/admin/users/<%= r.id %>/reset-password" data-confirm="Create a new temporary password for <%= r.first_name %> <%= r.last_name %>?">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                        <button class="btn btn-soft btn-xs" type="submit"><svg class="icon"><use href="#i-key"/></svg>Reset password</button>
+                      </form>
+                      <form method="post" action="/admin/users/<%= r.id %>/status" data-confirm="<%= r.status === 'active' ? 'Deactivate' : 'Activate' %> the account of <%= r.first_name %> <%= r.last_name %>?">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                        <button class="btn <%= r.status === 'active' ? 'btn-danger' : 'btn-soft' %> btn-xs" type="submit"><svg class="icon"><use href="#i-power"/></svg><%= r.status === 'active' ? 'Deactivate' : 'Activate' %></button>
+                      </form>
+                    <% } %>
+                  </span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-user"/></svg><strong>No accounts found</strong>Try a different search or filter.</div>
+  <% } %>
+</section>
+
+<%- include('../partials/pagination') %>

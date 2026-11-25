@@ -1,0 +1,26 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/news', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>?_csrf=<%= encodeURIComponent(csrfToken()) %>" enctype="multipart/form-data" novalidate>
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'title', label: 'Title', required: true, autofocus: true, maxlength: 190, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'category', label: 'Category', type: 'select', required: true, options: categoryOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'status', label: 'Status', type: 'select', options: statusOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'excerpt', label: 'Short summary (shown on the homepage)', type: 'textarea', rows: 2, maxlength: 300, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'body', label: 'Article text', type: 'textarea', rows: 12, required: true, wide: true, hint: 'Leave a blank line between paragraphs.' } }) %>
+
+    <label class="field field-wide">
+      <span>Cover image</span>
+      <% if (isEdit && article.cover_image) { %>
+        <img class="cover" src="<%= article.cover_image %>" alt="Current cover image">
+        <span class="check"><input type="checkbox" name="remove_cover" value="1"> <span>Remove the current image</span></span>
+      <% } %>
+      <input type="file" name="cover" accept="image/jpeg,image/png,image/webp">
+      <small class="field-hint">JPG, PNG or WebP, up to 3 MB. Optional.</small>
+      <% if (errors && errors.cover) { %><small class="field-error"><%= errors.cover %></small><% } %>
+    </label>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Save article' %></button>
+    <a class="btn btn-soft" href="/admin/news">Cancel</a>
+  </div>
+</form>

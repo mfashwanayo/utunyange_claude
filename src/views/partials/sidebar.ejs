@@ -1,0 +1,31 @@
+<aside class="sidebar" id="sidebar" aria-label="Portal menu">
+  <a class="brand brand-light" href="/">
+    <span class="brand-mark">U</span>
+    <span class="brand-text"><strong><%= school.name %></strong><small><%= portal && portal.name ? portal.name : 'Portal' %></small></span>
+  </a>
+
+  <nav class="side-nav">
+    <%
+      var menu = (typeof nav !== 'undefined' && nav) ? nav : [{ title: 'Menu', items: [{ href: portalHome, label: 'Dashboard', icon: 'layout' }] }];
+    %>
+    <% menu.forEach(function (group) { %>
+      <p class="side-title"><%= group.title %></p>
+      <% group.items.forEach(function (item) {
+           var active = currentPath === item.href || (item.href !== portalHome && currentPath.indexOf(item.href + '/') === 0);
+      %>
+        <a class="side-link<%= active ? ' is-active' : '' %>" href="<%= item.href %>"<%- active ? ' aria-current="page"' : '' %>>
+          <svg class="icon"><use href="#i-<%= item.icon %>"/></svg><%= item.label %><% if (item.badge) { %><span class="side-badge"><%= item.badge %></span><% } %>
+        </a>
+      <% }) %>
+    <% }) %>
+
+    <p class="side-title">Account</p>
+    <a class="side-link" href="/auth/change-password"><svg class="icon"><use href="#i-key"/></svg>Change password</a>
+    <a class="side-link" href="/"><svg class="icon"><use href="#i-home"/></svg>School website</a>
+  </nav>
+
+  <form class="side-logout" method="post" action="/auth/logout">
+    <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+    <button type="submit" class="side-link"><svg class="icon"><use href="#i-log-out"/></svg>Sign out</button>
+  </form>
+</aside>

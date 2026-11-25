@@ -1,0 +1,88 @@
+<%- include('../partials/page-head', { ph: {
+  title: classLabel(cls.name, cls.section),
+  subtitle: cls.level_name + ' - ' + cls.year_name + (cls.teacher_name ? ' - Class teacher: ' + cls.teacher_name : ''),
+  actions: [{ href: '/admin/classes/' + cls.id + '/edit', label: 'Edit class', icon: 'edit' }, { href: '/admin/classes', label: 'All classes', cls: 'btn-soft' }]
+} }) %>
+
+<div class="cards-2">
+  <section class="card">
+    <h3>Subjects &amp; teachers</h3>
+    <% if (subjects.length) { %>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Subject</th><th>Teacher</th><th></th></tr></thead>
+          <tbody>
+            <% subjects.forEach(function (s) { %>
+              <tr>
+                <td><span class="cell-main"><%= s.name %></span><span class="cell-sub"><%= s.code %></span></td>
+                <td>
+                  <form class="inline-form" method="post" action="/admin/classes/<%= cls.id %>/subjects/<%= s.id %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                    <select name="teacher_id" aria-label="Teacher for <%= s.name %>">
+                      <option value="">Not assigned</option>
+                      <% teacherOptions.forEach(function (o) { %><option value="<%= o.value %>"<%= String(s.teacher_id) === String(o.value) ? ' selected' : '' %>><%= o.label %></option><% }) %>
+                    </select>
+                    <button class="btn btn-soft btn-xs" type="submit">Save</button>
+                  </form>
+                </td>
+                <td class="actions">
+                  <form method="post" action="/admin/classes/<%= cls.id %>/subjects/<%= s.id %>/remove" data-confirm="Remove <%= s.name %> from this class?">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                    <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Remove</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="cell-sub" style="margin-bottom:12px">No subjects added to this class yet.</p>
+    <% } %>
+
+    <% if (subjectOptions.length) { %>
+      <form class="inline-form" method="post" action="/admin/classes/<%= cls.id %>/subjects" style="margin-top:16px">
+        <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+        <label class="field"><span>Add subject</span>
+          <select name="subject_id" required>
+            <option value="">Choose...</option>
+            <% subjectOptions.forEach(function (o) { %><option value="<%= o.value %>"><%= o.label %></option><% }) %>
+          </select>
+        </label>
+        <label class="field"><span>Teacher</span>
+          <select name="teacher_id">
+            <option value="">Not assigned</option>
+            <% teacherOptions.forEach(function (o) { %><option value="<%= o.value %>"><%= o.label %></option><% }) %>
+          </select>
+        </label>
+        <button class="btn btn-primary btn-sm" type="submit" style="margin-bottom:6px">Add</button>
+      </form>
+    <% } else if (!subjects.length) { %>
+      <p class="cell-sub">No subjects exist yet. <a href="/admin/subjects/new"><strong>Add a subject</strong></a> first.</p>
+    <% } %>
+  </section>
+
+  <div class="stack">
+    <section class="card">
+      <h3>Students (<%= students.length %>)</h3>
+      <% if (students.length) { %>
+        <ul class="activity">
+          <% students.forEach(function (s) { %>
+            <li><span><a href="/admin/students/<%= s.id %>"><%= s.first_name %> <%= s.last_name %></a></span><small><%= s.admission_no %></small></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="cell-sub">No students yet. Choose this class when adding or editing a student.</p>
+      <% } %>
+    </section>
+
+    <section class="card">
+      <h3>Delete class</h3>
+      <p class="cell-sub" style="margin-bottom:12px">Only possible while the class has no students, attendance or marks.</p>
+      <form method="post" action="/admin/classes/<%= cls.id %>/delete" data-confirm="Delete class <%= classLabel(cls.name, cls.section) %>?">
+        <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+        <button class="btn btn-danger btn-sm" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Delete class</button>
+      </form>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: isEdit ? '/admin/classes/' + cls.id : '/admin/classes', label: 'Back', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'academic_year_id', label: 'Academic year', type: 'select', required: true, blank: 'Choose...', options: yearOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'level_id', label: 'Level', type: 'select', required: true, blank: 'Choose...', options: levelOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'name', label: 'Class name', required: true, autofocus: true, maxlength: 60, placeholder: 'P4, S2 ...' } }) %>
+    <%- include('../partials/field', { f: { name: 'section', label: 'Stream / section', maxlength: 20, placeholder: 'A, B, Blue ...', hint: 'Leave blank if the class has one stream.' } }) %>
+    <%- include('../partials/field', { f: { name: 'combination', label: 'Combination (A-Level)', maxlength: 60, placeholder: 'PCM, HEG ...' } }) %>
+    <%- include('../partials/field', { f: { name: 'capacity', label: 'Capacity', type: 'number', maxlength: 3 } }) %>
+    <%- include('../partials/field', { f: { name: 'class_teacher_id', label: 'Class teacher', type: 'select', blank: 'Not assigned', options: teacherOptions } }) %>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Create class' %></button>
+    <a class="btn btn-soft" href="<%= isEdit ? '/admin/classes/' + cls.id : '/admin/classes' %>">Cancel</a>
+  </div>
+</form>

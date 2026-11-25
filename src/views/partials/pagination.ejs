@@ -1,0 +1,16 @@
+<%# Needs `pager` (from paginate()) and `qs` (filters as a query string). %>
+<% var pbase = (typeof qs !== 'undefined' && qs) ? '?' + qs + '&' : '?'; %>
+<% if (pager.pages > 1) { %>
+  <nav class="pager" aria-label="Pages">
+    <span class="pager-info">Showing <%= pager.from %>-<%= pager.to %> of <%= pager.total %></span>
+    <div class="pager-links">
+      <% if (pager.page > 1) { %><a href="<%= pbase %>page=<%= pager.page - 1 %>">Previous</a><% } %>
+      <% for (var pi = Math.max(1, pager.page - 2); pi <= Math.min(pager.pages, pager.page + 2); pi++) { %>
+        <a class="<%= pi === pager.page ? 'is-current' : '' %>" href="<%= pbase %>page=<%= pi %>"><%= pi %></a>
+      <% } %>
+      <% if (pager.page < pager.pages) { %><a href="<%= pbase %>page=<%= pager.page + 1 %>">Next</a><% } %>
+    </div>
+  </nav>
+<% } else if (pager.total > 0) { %>
+  <p class="pager-info">Showing all <%= pager.total %></p>
+<% } %>

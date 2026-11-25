@@ -1,0 +1,4 @@
+-- The first Super Admin account is NOT created here.
+-- `npm run db:setup` (database/setup.js) creates it with a properly hashed
+-- password, using ADMIN_EMAIL and ADMIN_PASSWORD from your .env file.
+-- Never store plain-text passwords in SQL files.

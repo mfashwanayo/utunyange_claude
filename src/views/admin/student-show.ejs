@@ -1,0 +1,114 @@
+<%- include('../partials/page-head', { ph: {
+  title: student.first_name + ' ' + student.last_name,
+  subtitle: 'Admission no. ' + student.admission_no,
+  actions: [{ href: '/admin/students/' + student.id + '/edit', label: 'Edit student', icon: 'edit' }, { href: '/admin/students', label: 'All students', cls: 'btn-soft' }]
+} }) %>
+
+<div class="cards-2">
+  <div class="stack">
+    <section class="card">
+      <h3>Details</h3>
+      <dl class="kv">
+        <dt>Status</dt><dd><span class="badge badge-<%= student.status === 'active' ? 'green' : (student.status === 'graduated' ? 'blue' : 'gray') %>"><%= student.status %></span></dd>
+        <dt>Gender</dt><dd><%= student.gender === 'male' ? 'Male' : 'Female' %></dd>
+        <dt>Date of birth</dt><dd><%= student.date_of_birth || '-' %></dd>
+        <dt>Admitted on</dt><dd><%= student.admitted_on || '-' %></dd>
+        <dt>Class<%= year ? ' (' + year.name + ')' : '' %></dt>
+        <dd><% if (student.class_id) { %><a href="/admin/classes/<%= student.class_id %>"><%= classLabel(student.class_name, student.class_section) %></a><% } else { %>Not in a class<% } %></dd>
+        <dt>Address</dt><dd><%= student.address || '-' %></dd>
+        <dt>Medical notes</dt><dd><%= student.medical_notes || '-' %></dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h3>Parents &amp; guardians</h3>
+      <% if (parents.length) { %>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Name</th><th>Relationship</th><th>Contact</th><th></th></tr></thead>
+            <tbody>
+              <% parents.forEach(function (p) { %>
+                <tr>
+                  <td><a class="cell-main" href="/admin/parents/<%= p.parent_id %>/edit"><%= p.first_name %> <%= p.last_name %></a><% if (p.is_primary) { %><span class="badge badge-yellow">Primary contact</span><% } %></td>
+                  <td><%= p.relationship %></td>
+                  <td><span class="cell-sub" style="color:inherit"><%= p.phone || '-' %></span><span class="cell-sub"><%= p.email %></span></td>
+                  <td class="actions">
+                    <form method="post" action="/admin/students/<%= student.id %>/parents/<%= p.parent_id %>/remove" data-confirm="Remove <%= p.first_name %> <%= p.last_name %> from this student?">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                      <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Remove</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="cell-sub" style="margin-bottom:12px">No parent is linked to this student yet.</p>
+      <% } %>
+
+      <% if (parentOptions.length) { %>
+        <form class="inline-form" method="post" action="/admin/students/<%= student.id %>/parents" style="margin-top:16px">
+          <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+          <label class="field"><span>Link a parent</span>
+            <select name="parent_id" required>
+              <option value="">Choose a parent...</option>
+              <% parentOptions.forEach(function (o) { %><option value="<%= o.value %>"><%= o.label %></option><% }) %>
+            </select>
+          </label>
+          <label class="field"><span>Relationship</span>
+            <select name="relationship">
+              <% relationshipOptions.forEach(function (o) { %><option value="<%= o.value %>"<%= o.value === 'guardian' ? ' selected' : '' %>><%= o.label %></option><% }) %>
+            </select>
+          </label>
+          <label class="check" style="padding-bottom:12px"><input type="checkbox" name="is_primary" value="1"> <span>Primary contact</span></label>
+          <button class="btn btn-primary btn-sm" type="submit" style="margin-bottom:6px">Link parent</button>
+        </form>
+      <% } else { %>
+        <p class="cell-sub" style="margin-top:12px">Need another parent? <a href="/admin/parents/new"><strong>Add a parent first</strong></a>, then link them here.</p>
+      <% } %>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="card">
+      <h3>Student portal login</h3>
+      <% if (student.user_id) { %>
+        <dl class="kv" style="grid-template-columns:90px 1fr">
+          <dt>Email</dt><dd><%= student.login_email %></dd>
+          <dt>Status</dt><dd><span class="badge badge-<%= student.login_status === 'active' ? 'green' : 'gray' %>"><%= student.login_status %></span></dd>
+        </dl>
+        <div class="actions" style="justify-content:flex-start;margin-top:16px">
+          <form method="post" action="/admin/students/<%= student.id %>/reset-password" data-confirm="Create a new temporary password for this student?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+            <button class="btn btn-soft btn-xs" type="submit"><svg class="icon"><use href="#i-key"/></svg>Reset password</button>
+          </form>
+          <form method="post" action="/admin/students/<%= student.id %>/status" data-confirm="<%= student.login_status === 'active' ? 'Deactivate' : 'Activate' %> this student's login?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+            <button class="btn <%= student.login_status === 'active' ? 'btn-danger' : 'btn-soft' %> btn-xs" type="submit"><svg class="icon"><use href="#i-power"/></svg><%= student.login_status === 'active' ? 'Deactivate' : 'Activate' %></button>
+          </form>
+        </div>
+      <% } else { %>
+        <p class="cell-sub" style="margin-bottom:12px">This student has no login yet.</p>
+        <form class="inline-form" method="post" action="/admin/students/<%= student.id %>/login">
+          <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+          <label class="field"><span>Login email</span><input type="email" name="login_email" required maxlength="190" placeholder="student@example.com"></label>
+          <button class="btn btn-primary btn-sm" type="submit" style="margin-bottom:6px">Create login</button>
+        </form>
+      <% } %>
+    </section>
+
+    <section class="card">
+      <h3>Class history</h3>
+      <% if (enrollments.length) { %>
+        <ul class="activity">
+          <% enrollments.forEach(function (e) { %>
+            <li><span><strong><%= e.year_name %></strong> &middot; <%= classLabel(e.class_name, e.class_section) %></span><small><%= e.status %></small></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="cell-sub">Not enrolled in any class yet.</p>
+      <% } %>
+    </section>
+  </div>
+</div>

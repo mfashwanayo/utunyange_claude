@@ -1,0 +1,31 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: isEdit ? '/admin/students/' + student.id : '/admin/students', label: 'Back', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <h3 class="form-section">Student details</h3>
+    <%- include('../partials/field', { f: { name: 'first_name', label: 'First name', required: true, autofocus: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'last_name', label: 'Last name', required: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'gender', label: 'Gender', type: 'select', required: true, blank: 'Choose...', options: genderOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'date_of_birth', label: 'Date of birth', type: 'date' } }) %>
+    <%- include('../partials/field', { f: { name: 'admission_no', label: 'Admission number', maxlength: 30, required: isEdit, hint: isEdit ? '' : 'Leave blank to generate one automatically.' } }) %>
+    <%- include('../partials/field', { f: { name: 'admitted_on', label: 'Admission date', type: 'date' } }) %>
+    <%- include('../partials/field', { f: { name: 'address', label: 'Home address', maxlength: 255, wide: true } }) %>
+    <%- include('../partials/field', { f: { name: 'medical_notes', label: 'Medical notes (allergies, conditions)', type: 'textarea', rows: 3, maxlength: 2000, wide: true } }) %>
+
+    <h3 class="form-section">Class and status</h3>
+    <%- include('../partials/field', { f: { name: 'class_id', label: year ? 'Class in ' + year.name : 'Class', type: 'select', blank: 'No class yet', options: classOptions, hint: year ? (classOptions.length ? '' : 'No classes exist for ' + year.name + ' yet. Add classes first.') : 'No current academic year is set. Add one under Academic years.' } }) %>
+    <%- include('../partials/field', { f: { name: 'status', label: 'Status', type: 'select', options: statusOptions } }) %>
+
+    <% if (!isEdit) { %>
+      <h3 class="form-section">Student login (optional)</h3>
+      <%- include('../partials/field', { f: { name: 'create_login', label: 'Create a login so the student can use the student portal', type: 'checkbox', wide: true } }) %>
+      <%- include('../partials/field', { f: { name: 'login_email', label: 'Login email', type: 'email', maxlength: 190, hint: 'A temporary password is shown once after saving.', wide: true } }) %>
+    <% } %>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Add student' %></button>
+    <a class="btn btn-soft" href="<%= isEdit ? '/admin/students/' + student.id : '/admin/students' %>">Cancel</a>
+  </div>
+</form>

@@ -1,0 +1,7 @@
+<article class="article">
+  <a class="back" href="/news"><svg class="icon" style="transform:rotate(180deg)"><use href="#i-arrow-right"/></svg>All news</a>
+  <p class="news-meta"><span class="tag"><%= article.category %></span><%= article.date %></p>
+  <h1><%= article.title %></h1>
+  <% if (article.cover_image) { %><img class="article-cover" src="<%= article.cover_image %>" alt=""><% } %>
+  <div class="article-body"><%= article.body %></div>
+</article>

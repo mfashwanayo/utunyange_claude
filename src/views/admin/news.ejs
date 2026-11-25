@@ -1,0 +1,50 @@
+<%- include('../partials/page-head', { ph: { title: 'News', subtitle: pager.total + ' article(s). Published articles appear on the homepage.', actions: [{ href: '/admin/news/new', label: 'Write article', icon: 'plus' }] } }) %>
+
+<form class="filters" method="get" action="/admin/news">
+  <input type="search" name="q" value="<%= filters.q %>" placeholder="Search title or category">
+  <select name="status" aria-label="Status">
+    <option value="">Any status</option>
+    <option value="published"<%= filters.status === 'published' ? ' selected' : '' %>>Published</option>
+    <option value="draft"<%= filters.status === 'draft' ? ' selected' : '' %>>Draft</option>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+  <% if (filters.q || filters.status) { %><a class="btn btn-ghost-dark btn-sm" href="/admin/news">Clear</a><% } %>
+</form>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Article</th><th>Category</th><th>Status</th><th>Published</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td>
+                <% if (r.cover_image) { %><img class="thumb" src="<%= r.cover_image %>" alt=""><% } %>
+                <span class="cell-main"><%= r.title %></span><span class="cell-sub">by <%= r.author_name || 'Unknown' %></span>
+              </td>
+              <td><span class="badge badge-blue"><%= r.category %></span></td>
+              <td><span class="badge badge-<%= r.status === 'published' ? 'green' : 'gray' %>"><%= r.status %></span></td>
+              <td><%= r.published_at ? fmtDateTime(r.published_at) : '-' %></td>
+              <td class="actions">
+                <a class="btn btn-soft btn-xs" href="/admin/news/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+                <form method="post" action="/admin/news/<%= r.id %>/publish">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-soft btn-xs" type="submit"><%= r.status === 'published' ? 'Unpublish' : 'Publish' %></button>
+                </form>
+                <form method="post" action="/admin/news/<%= r.id %>/delete" data-confirm="Delete the article &quot;<%= r.title %>&quot;?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-globe"/></svg><strong>No articles yet</strong>Write your first article for the school website.</div>
+  <% } %>
+</section>
+
+<%- include('../partials/pagination') %>

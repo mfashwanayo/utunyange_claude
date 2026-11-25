@@ -1,0 +1,46 @@
+<%- include('../partials/page-head', { ph: { title: 'Events', subtitle: pager.total + ' event(s). Published upcoming events appear on the homepage.', actions: [{ href: '/admin/events/new', label: 'Add event', icon: 'plus' }] } }) %>
+
+<form class="filters" method="get" action="/admin/events">
+  <input type="search" name="q" value="<%= filters.q %>" placeholder="Search title or location">
+  <select name="scope" aria-label="When">
+    <option value="">All events</option>
+    <option value="upcoming"<%= filters.scope === 'upcoming' ? ' selected' : '' %>>Upcoming</option>
+    <option value="past"<%= filters.scope === 'past' ? ' selected' : '' %>>Past</option>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+  <% if (filters.q || filters.scope) { %><a class="btn btn-ghost-dark btn-sm" href="/admin/events">Clear</a><% } %>
+</form>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Event</th><th>When</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td><span class="cell-main"><%= r.title %></span><span class="cell-sub"><%= r.location || 'No location' %></span></td>
+              <td><%= fmtDateTime(r.starts_at) %></td>
+              <td><span class="badge badge-<%= r.is_published ? 'green' : 'gray' %>"><%= r.is_published ? 'published' : 'hidden' %></span></td>
+              <td class="actions">
+                <a class="btn btn-soft btn-xs" href="/admin/events/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+                <form method="post" action="/admin/events/<%= r.id %>/publish">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-soft btn-xs" type="submit"><%= r.is_published ? 'Hide' : 'Publish' %></button>
+                </form>
+                <form method="post" action="/admin/events/<%= r.id %>/delete" data-confirm="Delete the event &quot;<%= r.title %>&quot;?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-calendar"/></svg><strong>No events found</strong>Add an event for the school calendar.</div>
+  <% } %>
+</section>
+
+<%- include('../partials/pagination') %>

@@ -1,0 +1,47 @@
+<%- include('../partials/page-head', { ph: { title: 'Teachers', subtitle: pager.total + ' teacher(s)', actions: [{ href: '/admin/teachers/new', label: 'Add teacher', icon: 'plus' }] } }) %>
+
+<form class="filters" method="get" action="/admin/teachers">
+  <input type="search" name="q" value="<%= filters.q %>" placeholder="Search name, email or staff number">
+  <select name="status" aria-label="Status">
+    <option value="">Any status</option>
+    <% ['active', 'inactive', 'suspended'].forEach(function (s) { %><option value="<%= s %>"<%= filters.status === s ? ' selected' : '' %>><%= s.charAt(0).toUpperCase() + s.slice(1) %></option><% }) %>
+  </select>
+  <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+  <% if (filters.q || filters.status) { %><a class="btn btn-ghost-dark btn-sm" href="/admin/teachers">Clear</a><% } %>
+</form>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Staff no.</th><th>Teacher</th><th>Specialization</th><th>Classes taught</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td><%= r.staff_no %></td>
+              <td><span class="cell-main"><%= r.first_name %> <%= r.last_name %></span><span class="cell-sub"><%= r.email %></span></td>
+              <td><%= r.specialization || '-' %></td>
+              <td><%= r.load_count %></td>
+              <td><span class="badge badge-<%= r.status === 'active' ? 'green' : (r.status === 'suspended' ? 'red' : 'gray') %>"><%= r.status %></span></td>
+              <td class="actions">
+                <a class="btn btn-soft btn-xs" href="/admin/teachers/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+                <form method="post" action="/admin/teachers/<%= r.id %>/reset-password" data-confirm="Create a new temporary password for <%= r.first_name %> <%= r.last_name %>?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-soft btn-xs" type="submit"><svg class="icon"><use href="#i-key"/></svg>Reset password</button>
+                </form>
+                <form method="post" action="/admin/teachers/<%= r.id %>/status" data-confirm="<%= r.status === 'active' ? 'Deactivate' : 'Activate' %> <%= r.first_name %> <%= r.last_name %>?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn <%= r.status === 'active' ? 'btn-danger' : 'btn-soft' %> btn-xs" type="submit"><svg class="icon"><use href="#i-power"/></svg><%= r.status === 'active' ? 'Deactivate' : 'Activate' %></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-briefcase"/></svg><strong>No teachers found</strong>Add your first teacher, or try a different search.</div>
+  <% } %>
+</section>
+
+<%- include('../partials/pagination') %>

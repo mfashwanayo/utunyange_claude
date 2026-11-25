@@ -1,0 +1,41 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="kicker">News</span>
+    <h1>News from <%= school.name %></h1>
+    <p>Announcements, achievements and updates from around the school.</p>
+  </div>
+</section>
+
+<div class="container">
+  <% if (items.length) { %>
+    <div class="news-grid">
+      <% items.forEach(function (n, i) { %>
+        <article class="news-tile">
+          <% if (n.image) { %>
+            <div class="news-thumb has-img"><img src="<%= n.image %>" alt="" loading="lazy"></div>
+          <% } else { %>
+            <div class="news-thumb tone-<%= (i % 3) + 1 %>"><svg class="icon"><use href="#i-<%= n.icon %>"/></svg></div>
+          <% } %>
+          <div class="news-body">
+            <p class="news-meta"><span class="tag"><%= n.category %></span><%= n.date %></p>
+            <h3><a href="<%= n.href %>"><%= n.title %></a></h3>
+            <p><%= n.text %></p>
+            <a class="link-arrow" href="<%= n.href %>">Read more <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+
+    <% if (pager.pages > 1) { %>
+      <nav class="public-pager" aria-label="Pages">
+        <% if (pager.page > 1) { %><a href="/news?page=<%= pager.page - 1 %>">Previous</a><% } %>
+        <% for (var pi = 1; pi <= pager.pages; pi++) { %>
+          <a class="<%= pi === pager.page ? 'is-current' : '' %>" href="/news?page=<%= pi %>"><%= pi %></a>
+        <% } %>
+        <% if (pager.page < pager.pages) { %><a href="/news?page=<%= pager.page + 1 %>">Next</a><% } %>
+      </nav>
+    <% } %>
+  <% } else { %>
+    <div class="public-empty"><h2>No news yet</h2><p>Please check back soon.</p></div>
+  <% } %>
+</div>

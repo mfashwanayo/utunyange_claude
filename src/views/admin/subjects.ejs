@@ -1,0 +1,30 @@
+<%- include('../partials/page-head', { ph: { title: 'Subjects', subtitle: rows.length + ' subject(s)', actions: [{ href: '/admin/subjects/new', label: 'Add subject', icon: 'plus' }] } }) %>
+
+<section class="card card-flush">
+  <% if (rows.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Code</th><th>Subject</th><th>Level</th><th>Used in classes</th><th></th></tr></thead>
+        <tbody>
+          <% rows.forEach(function (r) { %>
+            <tr>
+              <td><strong><%= r.code %></strong></td>
+              <td><%= r.name %></td>
+              <td><%= r.level_name || 'All levels' %></td>
+              <td><%= r.class_count %></td>
+              <td class="actions">
+                <a class="btn btn-soft btn-xs" href="/admin/subjects/<%= r.id %>/edit"><svg class="icon"><use href="#i-edit"/></svg>Edit</a>
+                <form method="post" action="/admin/subjects/<%= r.id %>/delete" data-confirm="Delete the subject <%= r.name %>?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+                  <button class="btn btn-danger btn-xs" type="submit"><svg class="icon"><use href="#i-trash"/></svg>Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty"><svg class="icon"><use href="#i-book"/></svg><strong>No subjects yet</strong>Add subjects such as Mathematics or English.</div>
+  <% } %>
+</section>

@@ -1,0 +1,14 @@
+<%# Page heading with action buttons. Usage: include('../partials/page-head', { ph: { title, subtitle, actions: [{ href, label, icon, cls }] } }) %>
+<div class="page-head">
+  <div>
+    <h2><%= ph.title %></h2>
+    <% if (ph.subtitle) { %><p><%= ph.subtitle %></p><% } %>
+  </div>
+  <% if (ph.actions && ph.actions.length) { %>
+    <div class="page-actions">
+      <% ph.actions.forEach(function (a) { %>
+        <a class="btn <%= a.cls || 'btn-primary' %> btn-sm" href="<%= a.href %>"><% if (a.icon) { %><svg class="icon"><use href="#i-<%= a.icon %>"/></svg><% } %><%= a.label %></a>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

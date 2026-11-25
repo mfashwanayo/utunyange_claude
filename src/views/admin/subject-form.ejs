@@ -1,0 +1,14 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/subjects', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'code', label: 'Code', required: true, autofocus: true, maxlength: 20, placeholder: 'MAT', hint: 'Short and unique, for example MAT or ENG.' } }) %>
+    <%- include('../partials/field', { f: { name: 'name', label: 'Subject name', required: true, maxlength: 120 } }) %>
+    <%- include('../partials/field', { f: { name: 'level_id', label: 'Level', type: 'select', blank: 'All levels', options: levelOptions } }) %>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Add subject' %></button>
+    <a class="btn btn-soft" href="/admin/subjects">Cancel</a>
+  </div>
+</form>

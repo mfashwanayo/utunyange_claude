@@ -1,0 +1,22 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/years', label: 'Back', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="/admin/years" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <h3 class="form-section">Year</h3>
+    <%- include('../partials/field', { f: { name: 'name', label: 'Year name', required: true, autofocus: true, maxlength: 20, placeholder: '2028' } }) %>
+    <div></div>
+    <%- include('../partials/field', { f: { name: 'start_date', label: 'Starts', type: 'date', required: true } }) %>
+    <%- include('../partials/field', { f: { name: 'end_date', label: 'Ends', type: 'date', required: true } }) %>
+    <% [1, 2, 3].forEach(function (n) { %>
+      <h3 class="form-section">Term <%= n %></h3>
+      <%- include('../partials/field', { f: { name: 't' + n + '_start', label: 'Starts', type: 'date', required: true } }) %>
+      <%- include('../partials/field', { f: { name: 't' + n + '_end', label: 'Ends', type: 'date', required: true } }) %>
+    <% }) %>
+    <%- include('../partials/field', { f: { name: 'make_current', label: 'Make this the current academic year', type: 'checkbox', wide: true } }) %>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Create year</button>
+    <a class="btn btn-soft" href="/admin/years">Cancel</a>
+  </div>
+</form>

@@ -1,0 +1,70 @@
+<% var limited = currentUser.role === 'receptionist'; %>
+<%- include('../partials/page-head', { ph: { title: 'Welcome, ' + currentUser.firstName, subtitle: year ? 'Current academic year: ' + year.name : 'No current academic year is set yet.' } }) %>
+
+<% if (!year && !limited) { %>
+  <div class="flash flash-info" role="status">
+    <svg class="icon"><use href="#i-info"/></svg>
+    <span><a href="/admin/years/new"><strong>Add the academic year</strong></a> first, so you can create classes and enrol students.</span>
+  </div>
+<% } %>
+
+<%
+  var tiles = [
+    { n: stats.students,     l: 'Active students',     icon: 'graduation', href: '/admin/students' },
+    { n: stats.teachers,     l: 'Teachers',            icon: 'briefcase',  href: '/admin/teachers' },
+    { n: stats.parents,      l: 'Parents',             icon: 'users',      href: '/admin/parents' },
+    { n: stats.classes,      l: 'Classes this year',   icon: 'layout',     href: '/admin/classes' },
+    { n: stats.news,         l: 'Published articles',  icon: 'globe',      href: '/admin/news', gold: true },
+    { n: stats.events,       l: 'Upcoming events',     icon: 'calendar',   href: '/admin/events', gold: true },
+    { n: stats.unread,       l: 'Unread messages',     icon: 'mail',       href: '/admin/inbox', gold: true },
+    { n: stats.applications, l: 'Pending applications', icon: 'briefcase', href: '' }
+  ];
+%>
+<div class="stat-grid">
+  <% tiles.forEach(function (t) { %>
+    <% var linked = t.href && (!limited || t.href === '/admin/inbox'); %>
+    <% if (linked) { %>
+      <a class="stat-tile" href="<%= t.href %>">
+        <span class="stat-ico<%= t.gold ? ' gold' : '' %>"><svg class="icon"><use href="#i-<%= t.icon %>"/></svg></span>
+        <span><span class="stat-num"><%= t.n %></span><span class="stat-lbl" style="display:block"><%= t.l %></span></span>
+      </a>
+    <% } else { %>
+      <div class="stat-tile">
+        <span class="stat-ico<%= t.gold ? ' gold' : '' %>"><svg class="icon"><use href="#i-<%= t.icon %>"/></svg></span>
+        <span><span class="stat-num"><%= t.n %></span><span class="stat-lbl" style="display:block"><%= t.l %></span></span>
+      </div>
+    <% } %>
+  <% }) %>
+</div>
+
+<div class="cards-2">
+  <section class="card">
+    <h3>Recent activity</h3>
+    <% if (recent.length) { %>
+      <ul class="activity">
+        <% recent.forEach(function (a) { %>
+          <li>
+            <span><strong><%= a.user_name || 'System' %></strong> &middot; <%= String(a.action).replace(/_/g, ' ') %></span>
+            <small><%= fmtDateTime(a.created_at) %></small>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p class="cell-sub">Nothing has happened yet. Actions such as sign-ins and edits will appear here.</p>
+    <% } %>
+  </section>
+
+  <% if (!limited) { %>
+    <section class="card">
+      <h3>Quick actions</h3>
+      <div class="quick">
+        <a class="btn btn-primary btn-sm" href="/admin/students/new"><svg class="icon"><use href="#i-plus"/></svg>Add student</a>
+        <a class="btn btn-soft btn-sm" href="/admin/teachers/new"><svg class="icon"><use href="#i-plus"/></svg>Add teacher</a>
+        <a class="btn btn-soft btn-sm" href="/admin/parents/new"><svg class="icon"><use href="#i-plus"/></svg>Add parent</a>
+        <a class="btn btn-soft btn-sm" href="/admin/classes/new"><svg class="icon"><use href="#i-plus"/></svg>Add class</a>
+        <a class="btn btn-gold btn-sm" href="/admin/news/new"><svg class="icon"><use href="#i-edit"/></svg>Write news</a>
+        <a class="btn btn-gold btn-sm" href="/admin/events/new"><svg class="icon"><use href="#i-calendar"/></svg>Add event</a>
+      </div>
+    </section>
+  <% } %>
+</div>

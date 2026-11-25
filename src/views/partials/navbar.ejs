@@ -1,0 +1,47 @@
+<div class="topbar">
+  <div class="container topbar-inner">
+    <div class="topbar-left">
+      <a href="tel:<%= school.phone.replace(/\s/g, '') %>"><svg class="icon"><use href="#i-phone"/></svg><%= school.phone %></a>
+      <a href="mailto:<%= school.email %>"><svg class="icon"><use href="#i-mail"/></svg><%= school.email %></a>
+    </div>
+    <div class="topbar-right">
+      <span><svg class="icon"><use href="#i-clock"/></svg><%= school.hours %></span>
+      <div class="topbar-social">
+        <a href="<%= school.social.facebook %>" aria-label="Facebook"><svg class="icon"><use href="#i-facebook"/></svg></a>
+        <a href="<%= school.social.instagram %>" aria-label="Instagram"><svg class="icon"><use href="#i-instagram"/></svg></a>
+        <a href="<%= school.social.twitter %>" aria-label="Twitter"><svg class="icon"><use href="#i-twitter"/></svg></a>
+        <a href="<%= school.social.youtube %>" aria-label="YouTube"><svg class="icon"><use href="#i-youtube"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a class="brand" href="/" aria-label="<%= school.fullName %> home">
+      <span class="brand-mark">U</span>
+      <span class="brand-text"><strong><%= school.name %></strong><small>School</small></span>
+    </a>
+
+    <nav class="nav-menu" id="navMenu" aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="/#home" class="active">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#academics">Academics</a></li>
+        <li><a href="/#portals">Portals</a></li>
+        <li><a href="/#news">News</a></li>
+        <li><a href="/#gallery">Gallery</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="btn btn-outline btn-sm" href="/auth/login"><svg class="icon"><use href="#i-lock"/></svg>Portal Login</a>
+        <a class="btn btn-gold btn-sm" href="/#admissions">Apply Now</a>
+      </div>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+      <svg class="icon icon-open"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close"><use href="#i-x"/></svg>
+    </button>
+  </div>
+</header>

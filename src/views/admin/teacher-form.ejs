@@ -1,0 +1,21 @@
+<%- include('../partials/page-head', { ph: { title: title, actions: [{ href: '/admin/teachers', label: 'Back to list', cls: 'btn-soft' }] } }) %>
+
+<form class="card form-card" method="post" action="<%= action %>" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+  <div class="form-grid">
+    <%- include('../partials/field', { f: { name: 'first_name', label: 'First name', required: true, autofocus: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'last_name', label: 'Last name', required: true, maxlength: 80 } }) %>
+    <%- include('../partials/field', { f: { name: 'email', label: 'Email (used to sign in)', type: 'email', required: true, maxlength: 190 } }) %>
+    <%- include('../partials/field', { f: { name: 'phone', label: 'Phone', type: 'tel', maxlength: 30 } }) %>
+    <%- include('../partials/field', { f: { name: 'gender', label: 'Gender', type: 'select', blank: 'Choose...', options: genderOptions } }) %>
+    <%- include('../partials/field', { f: { name: 'hire_date', label: 'Date hired', type: 'date' } }) %>
+    <%- include('../partials/field', { f: { name: 'qualification', label: 'Qualification', maxlength: 190 } }) %>
+    <%- include('../partials/field', { f: { name: 'specialization', label: 'Specialization / subjects', maxlength: 190 } }) %>
+    <%- include('../partials/field', { f: { name: 'address', label: 'Address', maxlength: 255, wide: true } }) %>
+  </div>
+  <% if (!isEdit) { %><p class="field-hint" style="margin-top:16px">A staff number and a temporary password are created automatically. The password is shown once after saving.</p><% } %>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Add teacher' %></button>
+    <a class="btn btn-soft" href="/admin/teachers">Cancel</a>
+  </div>
+</form>
